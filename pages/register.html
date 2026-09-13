@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create Account - ButterNet</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/themes.css">
+</head>
+<body>
+<main class="section" style="max-width:650px;margin:auto">
+<a class="logo" href="../index.html">🧈 ButterNet</a>
+<div class="heroCard" style="margin-top:50px;min-height:auto">
+<span class="eyebrow">JOIN THE NETWORK</span>
+<h1>Create your account.</h1>
+<p>Account creation will use the ButterNet backend once it is deployed.</p>
+<form onsubmit="event.preventDefault();alert('The ButterNet account API is not connected yet.');" style="width:100%;max-width:420px">
+<input placeholder="Username" style="width:100%;padding:15px;margin:7px 0;border-radius:12px;border:1px solid #ddd">
+<input placeholder="Password" type="password" style="width:100%;padding:15px;margin:7px 0;border-radius:12px;border:1px solid #ddd">
+<button class="button large" style="width:100%;margin-top:10px">Create account</button>
+</form>
+</div>
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const inputs = document.querySelectorAll("input");
+    const button = document.querySelector("button");
+
+    if (inputs.length < 2 || !button) {
+        console.error("ButterNet registration form could not be found.");
+        return;
+    }
+
+    const usernameInput = inputs[0];
+    const passwordInput = inputs[1];
+
+    const message = document.createElement("p");
+    message.id = "registerMessage";
+    message.style.marginTop = "12px";
+    message.style.fontWeight = "bold";
+    button.parentNode.insertBefore(message, button.nextSibling);
+
+    button.addEventListener("click", async () => {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value;
+
+        message.textContent = "";
+        button.disabled = true;
+        button.textContent = "Creating account...";
+
+        if (!username || !password) {
+            message.textContent = "Enter a username and password.";
+            button.disabled = false;
+            button.textContent = "Create account";
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok || !data.ok) {
+                message.textContent = data.error || "Account creation failed.";
+                button.disabled = false;
+                button.textContent = "Create account";
+                return;
+            }
+
+            message.textContent = "Account created! Welcome to ButterNet.";
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1000);
+
+        } catch (error) {
+            console.error(error);
+            message.textContent = "Could not connect to ButterNet.";
+            button.disabled = false;
+            button.textContent = "Create account";
+        }
+    });
+});
+</script>
+</body>
+</html>
+
