@@ -1,0 +1,10 @@
+﻿body.dark{
+--bg:#11110e;
+--text:#f7f7f2;
+--muted:#aaa99f;
+--card:rgba(30,30,25,.72);
+--border:rgba(255,255,255,.1);
+}
+body.dark .nav{background:rgba(17,17,14,.75)}
+body.dark .button.secondary{color:var(--text)}
+body.dark .cta{background:#f5c542;color:#171717}
